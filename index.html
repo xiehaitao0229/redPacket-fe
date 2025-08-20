@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +25,7 @@
             margin: 0 auto;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
 
@@ -233,8 +234,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .wallet-status {
@@ -258,6 +264,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -288,7 +295,7 @@
                     </div>
                 </div>
                 <button class="btn" onclick="queryRedPacket()">查询红包信息</button>
-                
+
                 <div class="info-grid" id="redpacketInfo" style="display: none;">
                     <div class="info-item">
                         <div class="label">创建者</div>
@@ -339,7 +346,7 @@
         // Sepolia 测试网配置
         const SEPOLIA_CHAIN_ID = '0xaa36a7'; // 11155111 in hex
         const SEPOLIA_RPC_URL = 'https://sepolia.infura.io/v3/';
-        
+
         // 预设的合约地址
         const CONTRACT_ADDRESS = '0xEeBd6dCfB90f55E7FbC6c9877B65f71E17aB2429';
 
@@ -348,7 +355,7 @@
             {
                 "inputs": [],
                 "name": "creator",
-                "outputs": [{"internalType": "address", "name": "", "type": "address"}],
+                "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
                 "stateMutability": "view",
                 "type": "function"
             },
@@ -356,12 +363,12 @@
                 "inputs": [],
                 "name": "getRedPacketInfo",
                 "outputs": [
-                    {"internalType": "address", "name": "_creator", "type": "address"},
-                    {"internalType": "uint256", "name": "_initialAmount", "type": "uint256"},
-                    {"internalType": "uint256", "name": "_remainingAmount", "type": "uint256"},
-                    {"internalType": "uint256", "name": "_initialCount", "type": "uint256"},
-                    {"internalType": "uint256", "name": "_remainingCount", "type": "uint256"},
-                    {"internalType": "bool", "name": "_isEqual", "type": "bool"}
+                    { "internalType": "address", "name": "_creator", "type": "address" },
+                    { "internalType": "uint256", "name": "_initialAmount", "type": "uint256" },
+                    { "internalType": "uint256", "name": "_remainingAmount", "type": "uint256" },
+                    { "internalType": "uint256", "name": "_initialCount", "type": "uint256" },
+                    { "internalType": "uint256", "name": "_remainingCount", "type": "uint256" },
+                    { "internalType": "bool", "name": "_isEqual", "type": "bool" }
                 ],
                 "stateMutability": "view",
                 "type": "function"
@@ -374,16 +381,16 @@
                 "type": "function"
             },
             {
-                "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+                "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
                 "name": "grabbedAmount",
-                "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+                "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
                 "stateMutability": "view",
                 "type": "function"
             },
             {
-                "inputs": [{"internalType": "address", "name": "", "type": "address"}],
+                "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
                 "name": "hasGrabbed",
-                "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+                "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
                 "stateMutability": "view",
                 "type": "function"
             }
@@ -399,15 +406,14 @@
             try {
                 // 使用 window.ethereum 直接获取 chainId，更兼容
                 const chainId = await window.ethereum.request({ method: 'eth_chainId' });
-                
                 if (chainId !== SEPOLIA_CHAIN_ID) {
                     document.getElementById('networkStatus').style.display = 'block';
-                    document.getElementById('networkText').innerHTML = 
+                    document.getElementById('networkText').innerHTML =
                         `❌ 当前网络 ID: ${chainId}<br>请切换到 Sepolia 测试网络 (${SEPOLIA_CHAIN_ID})`;
                     return false;
                 } else {
                     document.getElementById('networkStatus').style.display = 'block';
-                    document.getElementById('networkText').innerHTML = 
+                    document.getElementById('networkText').innerHTML =
                         `✅ 已连接到 Sepolia 测试网络`;
                     return true;
                 }
@@ -415,7 +421,7 @@
                 console.error('检查网络失败:', error);
                 // 如果检查失败，继续执行但给出警告
                 document.getElementById('networkStatus').style.display = 'block';
-                document.getElementById('networkText').innerHTML = 
+                document.getElementById('networkText').innerHTML =
                     `⚠️ 无法检测网络，请确保连接到 Sepolia 测试网络`;
                 return true; // 允许继续执行
             }
@@ -459,7 +465,7 @@
                 if (typeof window.ethereum !== 'undefined') {
                     await window.ethereum.request({ method: 'eth_requestAccounts' });
                     provider = new ethers.BrowserProvider(window.ethereum);
-                    
+                   
                     // 检查网络
                     const isCorrectNetwork = await checkNetwork();
                     if (!isCorrectNetwork) {
@@ -473,14 +479,14 @@
                             showStatus('请手动切换到 Sepolia 测试网络', 'info');
                         }
                     }
-                    
+
                     signer = await provider.getSigner();
                     userAccount = await signer.getAddress();
-                    
+
                     document.getElementById('walletText').textContent = `已连接: ${userAccount.slice(0, 6)}...${userAccount.slice(-4)}`;
                     document.getElementById('connectBtn').style.display = 'none';
                     showStatus('钱包连接成功！', 'success');
-                    
+
                     // 自动查询红包信息
                     setTimeout(queryRedPacket, 1000);
                 } else {
@@ -491,6 +497,8 @@
             }
         }
 
+   
+
         // 查询红包信息
         async function queryRedPacket() {
             if (!provider) {
@@ -500,19 +508,19 @@
 
             try {
                 showLoading(true);
-                
+
                 // 简化网络检查，如果失败就继续执行
                 try {
                     await checkNetwork();
                 } catch (networkError) {
                     console.warn('网络检查失败，继续执行:', networkError);
                 }
-                
+
                 contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, provider);
-                
+
                 // 获取红包信息
                 const info = await contract.getRedPacketInfo();
-                
+
                 // 更新显示
                 document.getElementById('creator').textContent = `${info[0].slice(0, 6)}...${info[0].slice(-4)}`;
                 document.getElementById('initialAmount').textContent = parseFloat(ethers.formatEther(info[1])).toFixed(6);
@@ -520,25 +528,25 @@
                 document.getElementById('initialCount').textContent = info[3].toString();
                 document.getElementById('remainingCount').textContent = info[4].toString();
                 document.getElementById('isEqual').textContent = info[5] ? '平均分配' : '随机分配';
-                
+
                 // 显示红包信息
                 document.getElementById('redpacketInfo').style.display = 'grid';
-                
+
                 // 启用抢红包按钮
                 document.getElementById('grabBtn').disabled = false;
-                
+
                 // 查询用户已抢金额
                 if (userAccount) {
                     const grabbedAmount = await contract.grabbedAmount(userAccount);
                     document.getElementById('myGrabbedAmount').textContent = parseFloat(ethers.formatEther(grabbedAmount)).toFixed(6);
                 }
-                
+
                 showStatus('红包信息查询成功！', 'success');
-                
+
             } catch (error) {
                 console.error('查询错误:', error);
                 let errorMsg = error.message;
-                
+
                 // 解析常见错误
                 if (errorMsg.includes('NETWORK_ERROR') || errorMsg.includes('could not detect network')) {
                     errorMsg = '网络连接错误，请检查网络设置或切换到 Sepolia 测试网';
@@ -547,7 +555,7 @@
                 } else if (errorMsg.includes('call exception')) {
                     errorMsg = '合约调用失败，请确保连接到正确的网络';
                 }
-                
+
                 showStatus('查询失败: ' + errorMsg, 'error');
                 document.getElementById('redpacketInfo').style.display = 'none';
             } finally {
@@ -564,7 +572,7 @@
 
             try {
                 showLoading(true);
-                
+
                 // 简化网络检查
                 try {
                     const isCorrectNetwork = await checkNetwork();
@@ -574,26 +582,26 @@
                 } catch (networkError) {
                     console.warn('网络检查失败，继续执行:', networkError);
                 }
-                
+
                 // 使用signer连接合约
                 const contractWithSigner = contract.connect(signer);
-                
+
                 // 发送交易
                 const tx = await contractWithSigner.grabRedPacket();
                 showStatus(`交易已发送，等待确认... Hash: ${tx.hash}`, 'info');
-                
+
                 // 等待交易确认
                 const receipt = await tx.wait();
-                
+
                 // 重新查询信息
                 await queryRedPacket();
-                
+
                 showStatus('🎉 恭喜！红包抢取成功！', 'success');
-                
+
             } catch (error) {
                 console.error('抢红包错误:', error);
                 let errorMsg = error.message;
-                
+
                 // 解析常见错误
                 if (errorMsg.includes('NoRedPacketsLeft')) {
                     errorMsg = '红包已被抢完！';
@@ -608,7 +616,7 @@
                 } else if (errorMsg.includes('NETWORK_ERROR')) {
                     errorMsg = '网络错误，请检查网络连接';
                 }
-                
+
                 showStatus('抢红包失败: ' + errorMsg, 'error');
             } finally {
                 showLoading(false);
@@ -621,7 +629,7 @@
             statusDiv.textContent = message;
             statusDiv.className = `status ${type}`;
             statusDiv.style.display = 'block';
-            
+
             setTimeout(() => {
                 statusDiv.style.display = 'none';
             }, 8000);
@@ -637,23 +645,23 @@
             if (typeof window.ethereum !== 'undefined') {
                 try {
                     provider = new ethers.BrowserProvider(window.ethereum);
-                    
+
                     // 检查是否已经连接
                     const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                     if (accounts.length > 0) {
                         userAccount = accounts[0];
-                        
+
                         // 尝试检查网络，失败则继续
                         try {
                             await checkNetwork();
                         } catch (error) {
                             console.warn('初始网络检查失败:', error);
                         }
-                        
+
                         signer = await provider.getSigner();
                         document.getElementById('walletText').textContent = `已连接: ${userAccount.slice(0, 6)}...${userAccount.slice(-4)}`;
                         document.getElementById('connectBtn').style.display = 'none';
-                        
+
                         // 自动查询红包信息
                         setTimeout(queryRedPacket, 1000);
                     }
@@ -686,4 +694,5 @@
         }
     </script>
 </body>
+
 </html>
